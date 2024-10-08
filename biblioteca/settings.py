@@ -29,7 +29,15 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS":"rest_framework.pagination.LimitOffsetPagination", 
+    "PAGE_SIZE":5,
+    "DEFAULT_FILTER_BACKENDS":(
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.OrderingFilter",
+        "rest_framework.filters.SearchFilter",
+    )
+}
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    "django_filters",
     'core.apps.CoreConfig',
 ]
 
