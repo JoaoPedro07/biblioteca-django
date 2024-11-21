@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Categoria, Autor, Livro
+from .models import Categoria, Autor, Livro, Colecao
+from django.contrib.auth.models import User
 
 
 class CategoriaSerializer(serializers.Serializer):
@@ -21,6 +22,7 @@ class AutorSerializer(serializers.Serializer):
         instance.nome = validated_data.get('nome', instance.nome)
         instance.save()
         return instance
+    
 class LivroSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     titulo = serializers.CharField(max_length=200)
@@ -36,3 +38,10 @@ class LivroSerializer(serializers.Serializer):
         instance.publicado_em = validated_data.get('publicado_em', instance.publicado_em)
         instance.save()
         return instance
+    
+class ColecaoSerializer(serializers.HyperlinkedModelSerializer):
+    livros = serializers.SlugRelatedField(queryset=Livro.objects.all(), slug_field="titulo", many=True)
+    colecionador = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field="pk")
+    class Meta:
+        model = Colecao
+        fields = ('nome', 'descricao', 'livros', 'colecionador')
